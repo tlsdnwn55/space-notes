@@ -1,10 +1,12 @@
 # Space Notes 🚀
 
+[![Deploy Space Notes to GitHub Pages](https://github.com/tlsdnwn55/space-notes/actions/workflows/deploy.yml/badge.svg)](https://github.com/tlsdnwn55/space-notes/actions/workflows/deploy.yml)
+
 > **신우주(Space)의 마크다운 기반 기술 스터디 & 개발 문서 아카이브**
 
 오픈소스 [Astro Starlight](https://starlight.astro.build/) 문서 엔진으로 구축된 고성능 마크다운 스터디 블로그입니다.
 
-- **🌐 Live Demo (GitHub Pages):** [https://tlsdnwn55.github.io/space-notes/](https://tlsdnwn55.github.io/space-notes/)
+- **🌐 Live Site:** [https://tlsdnwn55.github.io/space-notes/](https://tlsdnwn55.github.io/space-notes/)
 - **📁 로컬 워크스페이스:** `D:\space-notes`
 
 ---
@@ -31,7 +33,7 @@ git push origin main
 # 디펜던시 설치
 npm install
 
-# 로컬 개발 서버 시작 (http://localhost:4321)
+# 로컬 개발 서버 시작 (http://localhost:4321/space-notes/)
 npm run dev
 
 # 프로덕션 빌드 테스트
