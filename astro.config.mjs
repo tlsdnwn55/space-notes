@@ -128,7 +128,7 @@ export default defineConfig({
 			sidebar: [
 				{
 					label: 'All Articles',
-					items: [{ autogenerate: { directory: 'posts' } }],
+					items: [{ autogenerate: { directory: 'posts', collapsed: true } }],
 				},
 			],
 		}),
