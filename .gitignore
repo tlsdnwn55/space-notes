@@ -18,3 +18,10 @@ pnpm-debug.log*
 
 # macOS-specific files
 .DS_Store
+
+# local testing & demo notes (never pushed to GitHub)
+src/content/docs/posts/local-test/
+
+.agents
+
+

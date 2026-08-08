@@ -1,36 +1,180 @@
-/* Space Notes - Custom Theme & Perfect Theme Toggle Support */
+/* Space Notes - Custom Theme, Clean Mermaid & Compact TOC */
 :root {
   --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   --sl-font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+  --sl-sidebar-width: 17rem;
 }
 
-/* Light Theme Variables */
+/* ============================================================
+   1. Clean Mermaid Diagram Styling (Pure Native Dark Theme)
+   ============================================================ */
+.mermaid {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  margin: 1.75em 0 !important;
+  padding: 1em 0 !important;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow-x: auto !important;
+}
+
+.mermaid svg text,
+.mermaid svg tspan {
+  font-family: var(--sl-font) !important;
+}
+
+/* Force High Contrast Crisp White Text & Clean Boxes for All Mermaid Diagrams */
+.mermaid svg foreignObject *,
+.mermaid svg text,
+.mermaid svg tspan,
+.mermaid svg span,
+.mermaid svg div,
+.mermaid svg p,
+.mermaid svg .node label,
+.mermaid svg .node text,
+.mermaid svg .node span,
+.mermaid svg .node div,
+.mermaid svg .cluster-label text,
+.mermaid svg .cluster-label span,
+.mermaid svg .nodeLabel {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
+
+.mermaid svg .node rect,
+.mermaid svg .node polygon,
+.mermaid svg .node circle,
+.mermaid svg .node path {
+  fill: #1e293b !important;
+  stroke: #38bdf8 !important;
+  stroke-width: 2px !important;
+}
+
+.mermaid svg .cluster rect {
+  fill: #0f172a !important;
+  stroke: #64748b !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg .edgeLabel,
+.mermaid svg .edgeLabel rect,
+.mermaid svg .edgeLabel span,
+.mermaid svg .edgeLabel p,
+.mermaid svg .label {
+  background-color: #0f172a !important;
+  color: #38bdf8 !important;
+  fill: #38bdf8 !important;
+  font-weight: 600 !important;
+}
+
+/* Sequence Diagram Specific High Contrast Fixes */
+.mermaid svg .actor,
+.mermaid svg rect.actor {
+  fill: #1e293b !important;
+  stroke: #38bdf8 !important;
+  stroke-width: 2px !important;
+}
+
+.mermaid svg text.actor > tspan,
+.mermaid svg .actor-line {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  stroke: #38bdf8 !important;
+}
+
+.mermaid svg .note,
+.mermaid svg rect.note,
+.mermaid svg .noteRect {
+  fill: #0f172a !important;
+  stroke: #c084fc !important;
+  stroke-width: 1.5px !important;
+}
+
+.mermaid svg .noteText,
+.mermaid svg .noteText > tspan,
+.mermaid svg .noteText span {
+  fill: #ffffff !important;
+  color: #ffffff !important;
+  font-weight: 600 !important;
+}
+
+.mermaid svg .labelText,
+.mermaid svg .labelText tspan,
+.mermaid svg .loopText,
+.mermaid svg .loopText tspan,
+.mermaid svg .messageText {
+  fill: #38bdf8 !important;
+  color: #38bdf8 !important;
+  font-weight: 600 !important;
+}
+
+.mermaid svg .loopLine {
+  stroke: #64748b !important;
+}
+
+
+
+
+/* ============================================================
+   2. Eye-Friendly Light Theme (Warm Neutral Slate)
+   ============================================================ */
 :root[data-theme='light'] {
-  --sl-color-accent-low: #e0e7ff;
+  --sl-color-accent-low: #eef2ff;
   --sl-color-accent: #4f46e5;
   --sl-color-accent-high: #312e81;
-  --sl-color-bg: #f8fafc;
-  --sl-color-bg-nav: rgba(248, 250, 252, 0.85);
-  --sl-color-bg-sidebar: #f1f5f9;
+  
+  --sl-color-bg: #fcfcfd;
+  --sl-color-bg-nav: rgba(252, 252, 253, 0.88);
+  --sl-color-bg-sidebar: #f8fafc;
+  
+  --sl-color-white: #0f172a;
+  --sl-color-gray-1: #1e293b;
+  --sl-color-gray-2: #334155;
+  --sl-color-gray-3: #64748b;
+  --sl-color-gray-4: #94a3b8;
+  --sl-color-gray-5: #e2e8f0;
+  --sl-color-gray-6: #f1f5f9;
+  --sl-color-black: #ffffff;
   --sl-color-text-accent: #4f46e5;
 }
 
 :root[data-theme='light'] .card {
   background: #ffffff !important;
   border: 1px solid #e2e8f0 !important;
-  color: #0f172a !important;
+  color: #1e293b !important;
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03) !important;
 }
 
 :root[data-theme='light'] .card:hover {
-  border-color: #6366f1 !important;
-  background: #ffffff !important;
+  border-color: #818cf8 !important;
+  box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.08) !important;
 }
 
 :root[data-theme='light'] .site-title {
   color: #0f172a !important;
 }
 
-/* Dark Theme Variables */
+:root[data-theme='light'] .katex {
+  color: #1e293b !important;
+}
+
+:root[data-theme='light'] .katex-display {
+  background: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+:root[data-theme='light'] header.header {
+  border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* ============================================================
+   3. Dark Theme Variables (Minimalist Obsidian Dark)
+   ============================================================ */
 :root[data-theme='dark'] {
   --sl-color-accent-low: #18181b;
   --sl-color-accent: #818cf8;
@@ -54,6 +198,94 @@
 
 :root[data-theme='dark'] .site-title {
   color: #f8fafc !important;
+}
+
+:root[data-theme='dark'] .katex {
+  color: #f8fafc !important;
+}
+
+:root[data-theme='dark'] .katex-display {
+  background: #121215 !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ============================================================
+   4. Compact Right Sidebar (Table of Contents) Space Optimization
+   ============================================================ */
+.right-sidebar-container {
+  width: 12.5rem !important;
+}
+
+.right-sidebar {
+  font-size: 0.8125rem !important;
+  line-height: 1.4 !important;
+}
+
+.right-sidebar nav h2 {
+  font-size: 0.875rem !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.5rem !important;
+}
+
+.right-sidebar a {
+  padding-top: 0.25rem !important;
+  padding-bottom: 0.25rem !important;
+}
+
+/* Expand Main Content Container Width */
+.sl-container {
+  max-width: 58rem !important;
+}
+
+/* ============================================================
+   5. Desktop Left Sidebar Toggle & Mobile Optimization
+   ============================================================ */
+:root[data-sidebar-collapsed="true"] nav.sidebar {
+  display: none !important;
+}
+
+:root[data-sidebar-collapsed="true"] .main-frame {
+  padding-left: 0 !important;
+}
+
+.sidebar-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid var(--sl-color-gray-5);
+  color: var(--sl-color-gray-2);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  margin-right: 0.5rem;
+}
+
+.sidebar-toggle-btn:hover {
+  background: var(--sl-color-gray-5);
+  color: var(--sl-color-white);
+  border-color: var(--sl-color-accent);
+}
+
+@media (max-width: 50rem) {
+  .sl-container {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  
+  .katex-display {
+    padding: 0.75em 0.5em !important;
+    font-size: 0.95em !important;
+  }
+  
+  .sidebar-toggle-btn {
+    display: none !important;
+  }
 }
 
 /* Glassmorphism Header */
