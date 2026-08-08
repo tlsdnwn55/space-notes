@@ -1,15 +1,22 @@
 ---
 title: Space Notes
 description: Personal Technical Journal & Engineering Archive
+template: splash
 hero:
-  title: Space Notes
   tagline: "Personal Technical Journal & Engineering Archive"
+  actions:
+    - text: 아티클 읽기
+      link: /posts/welcome/
+      icon: right-arrow
 ---
 
-Software Engineering, System Architecture, Computer Science 스터디와 개발 경험을 기록하는 공간입니다.
+import { Card, CardGrid } from '@astrojs/starlight/components';
 
----
+## Recent Notes
 
-## Quick Navigation
-
-상단 검색창(`Ctrl + K` / `Cmd + K`) 또는 사이드바를 통해 작성된 전체 아티클을 탐색할 수 있습니다.
+<CardGrid>
+	<Card title="Welcome to Space Notes" icon="open-book">
+		기술 스터디 노트 아카이브에 오신 것을 환영합니다.
+		[아티클 읽기](/posts/welcome/)
+	</Card>
+</CardGrid>
