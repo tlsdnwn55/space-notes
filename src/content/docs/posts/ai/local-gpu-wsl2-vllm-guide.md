@@ -9,7 +9,7 @@ Windows PC(RTX 4070 / VRAM 12GB)에서 WSL2, NVIDIA Container Toolkit, Docker를
 
 ---
 
-:::note[📖 Quick Summary: 로컬 GPU 실습 아키텍처 한눈에 보기]
+:::note[Quick Summary: 로컬 GPU 실습 아키텍처 한눈에 보기]
 ```
 [ Windows 11 / 10 Host OS ] (최신 NVIDIA GeForce 드라이버 설치)
        │
@@ -33,7 +33,7 @@ Windows 환경에서 vLLM이나 최신 딥러닝 서빙 프레임워크를 돌�
 
 NVIDIA의 최신 Windows 드라이버는 WSL2 내부로 GPU를 직접 전달(Direct Pass-through)하므로, WSL2 내부에서 별도의 Linux용 GPU 드라이버를 중복 설치할 필요가 없습니다.
 
-### 📋 사전 준비 장비 및 스펙
+### 사전 준비 장비 및 스펙
 - **OS**: Windows 11 또는 Windows 10 (Build 19044 이상)
 - **GPU**: NVIDIA GeForce RTX 4070 (VRAM 12GB) / RTX 3000~4000 시리즈
 - **권장 RAM**: 시스템 메모리 32GB 이상
@@ -84,37 +84,7 @@ Docker 컨테이너 안에서 GPU를 활용하려면 **NVIDIA Container Toolkit*
 WSL2 Ubuntu 터미널에서 다음 명령을 순서대로 실행합니다.
 
 ```bash
-# 1. 기존 패키지 업데이트 및 기본 도구 설치
-sudo apt-get update && sudo apt-get install -y curl git ca-certificates gnupg lsb-release
-
-# 2. Docker Engine 설치 (공식 스크립트 활용)
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker $USER
-
-# 3. NVIDIA Container Toolkit 저장소 등록 (stable)
-curl -fsSL https://nvidia.github.io/libnvidia-container/gpgkey | sudo gpg --dearmor -o /usr/share/keyrings/nvidia-container-toolkit-keyring.gpg
-curl -s -L https://nvidia.github.io/libnvidia-container/stable/deb/nvidia-container-toolkit.list | \
-  sed 's#deb https://#deb [signed-by=/usr/share/keyrings/nvidia-container-toolkit-keyring.gpg] https://#g' | \
-  sudo tee /etc/apt/sources.list.d/nvidia-container-toolkit.list
-
-
-
-
-
-# 4. NVIDIA Container Toolkit 설치
-sudo apt-get update
-sudo apt-get install -y nvidia-container-toolkit
-
-# 5. Docker GPU 런타임 설정 및 Docker 서비스 재시작
-sudo nvidia-ctk runtime configure --runtime=docker
-sudo systemctl restart docker
-
-# (중요) 터미널을 종료 후 다시 접속하거나 다음 명령으로 그룹 적용
-newgrp docker
-```
-
-### 🧪 Docker GPU 통과 테스트
+# 1. 기### Docker GPU 통과 테스트
 Docker 안에서 GPU가 정상 인식되는지 테스트 컨테이너를 실행해 봅니다.
 
 ```bash
@@ -142,8 +112,62 @@ docker run --rm --gpus all nvidia/cuda:12.1.0-base-ubuntu22.04 nvidia-smi
 
 PyTorch와 CUDA 환경이 갖춰진 컨테이너를 띄우고 JupyterLab을 연동하여 코드를 작성하고 테스트할 수 있는 개발 환경을 구축합니다.
 
-:::note[⏳ 소요 시간 및 이미지 크기 안내]
+:::note[소요 시간 및 이미지 크기 안내]
 `pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel` 이미지에는 CUDA 12.1 개발 툴킷 및 cuDNN 개발 라이브러리가 풀 스택으로 포함되어 있어 **다운로드 압축 파일이 약 7GB, 디스크 압축 해제 용량은 무려 16.6GB**에 달합니다. 
+네트워크 속도에 따라 **최초 풀링(Pulling) 시 약 3분~10분 정도 소요**되므로 다운로드가 완수될 때까지 느긋하게 기다려 주세요.
+:::
+
+### ① JupyterLab 컨테이너 실행
+```bash
+# 1. 작업용 로컬 디렉토리 생성
+mkdir -p ~/llm-workspace
+
+# 2. PyTorch GPU 컨테이너 실행 (WSL2 GPU 라이브러리 경로 LD_LIBRARY_PATH 추가)
+docker run -d \
+  --name llm-lab \
+  --gpus all \
+  -e LD_LIBRARY_PATH=/usr/lib/wsl/lib \
+  -p 8888:8888 \
+  -p 8000:8000 \
+  -v ~/llm-workspace:/workspace \
+  -v ~/.cache/huggingface:/root/.cache/huggingface \
+  --ipc=host \
+  pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel \
+  tail -f /dev/null
+
+
+```
+
+```
+[ RTX 4070 환경 이미지 다운로드 완수 및 용량 검증 로그 ]
+Status: Downloaded newer image for pytorch/pytorch:2.1.2-cuda12.1-cudnn8-devel
+0a0f92f30dd607d2bbf199f8f5d1844ba092c048ba01fb669c72adfb6c7fc77a
+
+$ docker image ls | grep pytorch
+pytorch/pytorch  2.1.2-cuda12.1-cudnn8-devel  ecb3f786af6c  2 years ago  16.6GB
+```
+
+
+
+### ② 컨테이너 내부 환경 설정 및 JupyterLab 라이브러리 설치
+
+:::note[vLLM 및 관련 라이브러리 설치 소요 시간 안내]
+`pip install vllm` 실행 시 Triton, Transformers, Ray, FlashAttention 등 C++/CUDA 익스텐션 및 무거운 딥러닝 종속 패키지들이 함께 설치됩니다. 
+**최초 패키지 설치에 약 7분~8분 정도 소요**될 수 있으므로 터미널에서 작업이 완료될 때까지 기다려 주세요.
+:::
+
+```bash
+# 1. 컨테이너 내부 접속
+docker exec -it llm-lab bash
+
+# 2. vLLM 및 주피터 관련 필수 패키지 설치 (약 7분~8분 소요)
+pip install vllm jupyterlab matplotlib pandas requests
+
+# 3. JupyterLab 서버 실행
+jupyter lab --ip=0.0.0.0 --port=8888 --allow-root --no-browser --NotebookApp.token=''
+```
+
+### 주피터 접속�함되어 있어 **다운로드 압축 파일이 약 7GB, 디스크 압축 해제 용량은 무려 16.6GB**에 달합니다. 
 네트워크 속도에 따라 **최초 풀링(Pulling) 시 약 3분~10분 정도 소요**되므로 다운로드가 완수될 때까지 느긋하게 기다려 주세요.
 :::
 
