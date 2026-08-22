@@ -1,10 +1,12 @@
 ---
-title: "[Part 2] LLM 서빙 실전과 아키텍처 최적화 (vLLM, KV Cache, PagedAttention, FlashAttention)"
+title: "[Part 2] LLM 서빙 실전과 vLLM 최적화"
 description: "CloudNet LLM 서빙 스터디 1주차 2편 - KV Cache 메모리 파편화, vLLM PagedAttention, FlashAttention 원리, Continuous Batching, vLLM 파라미터 핸즈온, Python SDK 실습 및 벤치마크 부하 테스트"
 ---
 
 :::note[스터디 기록]
-Hands-On LLM Serving and Optimization 스터디 1주차 - vLLM, PagedAttention, Continuous Batching, FlashAttention 등 실제 서빙 현장에서 GPU 메모리 효율과 처리량을 극대화하는 2편 포스트입니다.
+CloudNet - Hands-On LLM Serving and Optimization 스터디 1주차
+
+vLLM, PagedAttention, Continuous Batching, FlashAttention 등 실제 서빙 현장에서 GPU 메모리 효율과 처리량을 극대화하는 2편 포스트입니다.
 :::
 
 ---
@@ -459,3 +461,15 @@ LLM 서빙 최적화는 하나의 옵션을 켜는 일이 아니라, **응답 �
 4. **Kwon et al. (2023)**, "Efficient Memory Management for Large Language Model Serving with PagedAttention", SOSP 2023 (vLLM Paper), [https://arxiv.org/abs/2309.06180](https://arxiv.org/abs/2309.06180)
 5. **Yu et al. (2022)**, "Orca: A Distributed Serving System for Transformer-Based Language Models", OSDI 2022 (Continuous Batching Paper)
 6. **vLLM Official Documentation**, [https://docs.vllm.ai/](https://docs.vllm.ai/)
+
+<div class="series-nav">
+  <a href="/space-notes/posts/ai/llm-serving-part-1/" class="series-nav-item prev">
+    <span class="series-nav-label">이전 파트</span>
+    <span class="series-nav-title">← [Part 1] LLM 서빙의 이해와 구조적 특징</span>
+  </a>
+  <a href="/space-notes/posts/ai/llm-serving-part-3/" class="series-nav-item next">
+    <span class="series-nav-label">다음 파트</span>
+    <span class="series-nav-title">[Part 3] 모델 서빙 시스템 설계와 구현 →</span>
+  </a>
+</div>
+

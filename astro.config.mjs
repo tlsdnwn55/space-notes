@@ -88,7 +88,7 @@ export default defineConfig({
 								titleWrapper.prepend(toggleBtn);
 							}
 
-							// 2. Mermaid Diagram Renderer (High-Contrast Clean Theme)
+							// 2. Mermaid Diagram Renderer (Adaptive Dual-Theme)
 							if (window.mermaid) {
 								const isDark = document.documentElement.dataset.theme !== 'light';
 								window.mermaid.initialize({
@@ -97,20 +97,19 @@ export default defineConfig({
 									themeVariables: {
 										darkMode: isDark,
 										background: 'transparent',
-										primaryColor: isDark ? '#1e293b' : '#f8fafc',
-										primaryTextColor: isDark ? '#ffffff' : '#0f172a',
-										primaryBorderColor: '#38bdf8',
-										lineColor: '#38bdf8',
-										nodeBorder: '#38bdf8',
-										clusterBkg: isDark ? '#0f172a' : '#f1f5f9',
-										clusterBorder: '#64748b',
+										primaryColor: isDark ? '#1e293b' : '#ffffff',
+										primaryTextColor: isDark ? '#ffffff' : '#1e293b',
+										primaryBorderColor: isDark ? '#38bdf8' : '#6366f1',
+										lineColor: isDark ? '#38bdf8' : '#6366f1',
+										nodeBorder: isDark ? '#38bdf8' : '#6366f1',
+										clusterBkg: isDark ? '#0f172a' : '#edf2f7',
+										clusterBorder: isDark ? '#64748b' : '#cbd5e1',
 										fontSize: '15px',
 										fontFamily: 'Inter, sans-serif'
 									}
 								});
 								window.mermaid.run({ querySelector: '.mermaid' });
 							}
-
 						}
 
 						if (document.readyState === 'complete' || document.readyState === 'interactive') {

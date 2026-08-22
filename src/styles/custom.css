@@ -6,14 +6,14 @@
 }
 
 /* ============================================================
-   1. Clean Mermaid Diagram Styling (Pure Native Dark Theme)
+   1. Clean Mermaid Diagram Styling (Adaptive Dual-Theme)
    ============================================================ */
 .mermaid {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   margin: 1.75em 0 !important;
-  padding: 1em 0 !important;
+  padding: 1.25em 0 !important;
   background: transparent !important;
   border: none !important;
   box-shadow: none !important;
@@ -25,20 +25,20 @@
   font-family: var(--sl-font) !important;
 }
 
-/* Force High Contrast Crisp White Text & Clean Boxes for All Mermaid Diagrams */
-.mermaid svg foreignObject *,
-.mermaid svg text,
-.mermaid svg tspan,
-.mermaid svg span,
-.mermaid svg div,
-.mermaid svg p,
-.mermaid svg .node label,
-.mermaid svg .node text,
-.mermaid svg .node span,
-.mermaid svg .node div,
-.mermaid svg .cluster-label text,
-.mermaid svg .cluster-label span,
-.mermaid svg .nodeLabel {
+/* --- Dark Theme Mermaid (Obsidian / Cyber Blue) --- */
+:root[data-theme='dark'] .mermaid svg foreignObject *,
+:root[data-theme='dark'] .mermaid svg text,
+:root[data-theme='dark'] .mermaid svg tspan,
+:root[data-theme='dark'] .mermaid svg span,
+:root[data-theme='dark'] .mermaid svg div,
+:root[data-theme='dark'] .mermaid svg p,
+:root[data-theme='dark'] .mermaid svg .node label,
+:root[data-theme='dark'] .mermaid svg .node text,
+:root[data-theme='dark'] .mermaid svg .node span,
+:root[data-theme='dark'] .mermaid svg .node div,
+:root[data-theme='dark'] .mermaid svg .cluster-label text,
+:root[data-theme='dark'] .mermaid svg .cluster-label span,
+:root[data-theme='dark'] .mermaid svg .nodeLabel {
   color: #ffffff !important;
   fill: #ffffff !important;
   font-weight: 600 !important;
@@ -46,117 +46,204 @@
   line-height: 1.4 !important;
 }
 
-.mermaid svg .node rect,
-.mermaid svg .node polygon,
-.mermaid svg .node circle,
-.mermaid svg .node path {
+:root[data-theme='dark'] .mermaid svg .node rect,
+:root[data-theme='dark'] .mermaid svg .node polygon,
+:root[data-theme='dark'] .mermaid svg .node circle,
+:root[data-theme='dark'] .mermaid svg .node path {
   fill: #1e293b !important;
   stroke: #38bdf8 !important;
   stroke-width: 2px !important;
 }
 
-.mermaid svg .cluster rect {
+:root[data-theme='dark'] .mermaid svg .cluster rect {
   fill: #0f172a !important;
   stroke: #64748b !important;
   stroke-width: 1.5px !important;
 }
 
-.mermaid svg .edgeLabel,
-.mermaid svg .edgeLabel rect,
-.mermaid svg .edgeLabel span,
-.mermaid svg .edgeLabel p,
-.mermaid svg .label {
+:root[data-theme='dark'] .mermaid svg .edgeLabel,
+:root[data-theme='dark'] .mermaid svg .edgeLabel rect,
+:root[data-theme='dark'] .mermaid svg .edgeLabel span,
+:root[data-theme='dark'] .mermaid svg .edgeLabel p,
+:root[data-theme='dark'] .mermaid svg .label {
   background-color: #0f172a !important;
   color: #38bdf8 !important;
   fill: #38bdf8 !important;
   font-weight: 600 !important;
 }
 
-/* Sequence Diagram Specific High Contrast Fixes */
-.mermaid svg .actor,
-.mermaid svg rect.actor {
+:root[data-theme='dark'] .mermaid svg .actor,
+:root[data-theme='dark'] .mermaid svg rect.actor {
   fill: #1e293b !important;
   stroke: #38bdf8 !important;
   stroke-width: 2px !important;
 }
 
-.mermaid svg text.actor > tspan,
-.mermaid svg .actor-line {
+:root[data-theme='dark'] .mermaid svg text.actor > tspan,
+:root[data-theme='dark'] .mermaid svg .actor-line {
   fill: #ffffff !important;
   color: #ffffff !important;
   stroke: #38bdf8 !important;
 }
 
-.mermaid svg .note,
-.mermaid svg rect.note,
-.mermaid svg .noteRect {
+:root[data-theme='dark'] .mermaid svg .note,
+:root[data-theme='dark'] .mermaid svg rect.note,
+:root[data-theme='dark'] .mermaid svg .noteRect {
   fill: #0f172a !important;
   stroke: #c084fc !important;
   stroke-width: 1.5px !important;
 }
 
-.mermaid svg .noteText,
-.mermaid svg .noteText > tspan,
-.mermaid svg .noteText span {
+:root[data-theme='dark'] .mermaid svg .noteText,
+:root[data-theme='dark'] .mermaid svg .noteText > tspan,
+:root[data-theme='dark'] .mermaid svg .noteText span {
   fill: #ffffff !important;
   color: #ffffff !important;
   font-weight: 600 !important;
 }
 
-.mermaid svg .labelText,
-.mermaid svg .labelText tspan,
-.mermaid svg .loopText,
-.mermaid svg .loopText tspan,
-.mermaid svg .messageText {
+:root[data-theme='dark'] .mermaid svg .labelText,
+:root[data-theme='dark'] .mermaid svg .labelText tspan,
+:root[data-theme='dark'] .mermaid svg .loopText,
+:root[data-theme='dark'] .mermaid svg .loopText tspan,
+:root[data-theme='dark'] .mermaid svg .messageText {
   fill: #38bdf8 !important;
   color: #38bdf8 !important;
   font-weight: 600 !important;
 }
 
-.mermaid svg .loopLine {
+:root[data-theme='dark'] .mermaid svg .loopLine {
   stroke: #64748b !important;
 }
 
+/* --- Light Theme Mermaid (GitHub Soft Slate - Crisp Surface + Indigo Line) --- */
+:root[data-theme='light'] .mermaid svg foreignObject *,
+:root[data-theme='light'] .mermaid svg text,
+:root[data-theme='light'] .mermaid svg tspan,
+:root[data-theme='light'] .mermaid svg span,
+:root[data-theme='light'] .mermaid svg div,
+:root[data-theme='light'] .mermaid svg p,
+:root[data-theme='light'] .mermaid svg .node label,
+:root[data-theme='light'] .mermaid svg .node text,
+:root[data-theme='light'] .mermaid svg .node span,
+:root[data-theme='light'] .mermaid svg .node div,
+:root[data-theme='light'] .mermaid svg .cluster-label text,
+:root[data-theme='light'] .mermaid svg .cluster-label span,
+:root[data-theme='light'] .mermaid svg .nodeLabel {
+  color: #1e293b !important;
+  fill: #1e293b !important;
+  font-weight: 600 !important;
+  font-size: 14px !important;
+  line-height: 1.4 !important;
+}
 
+:root[data-theme='light'] .mermaid svg .node rect,
+:root[data-theme='light'] .mermaid svg .node polygon,
+:root[data-theme='light'] .mermaid svg .node circle,
+:root[data-theme='light'] .mermaid svg .node path {
+  fill: #ffffff !important;
+  stroke: #6366f1 !important;
+  stroke-width: 1.5px !important;
+}
 
+:root[data-theme='light'] .mermaid svg .cluster rect {
+  fill: #edf2f7 !important;
+  stroke: #cbd5e1 !important;
+  stroke-width: 1.5px !important;
+}
+
+:root[data-theme='light'] .mermaid svg .edgeLabel,
+:root[data-theme='light'] .mermaid svg .edgeLabel rect,
+:root[data-theme='light'] .mermaid svg .edgeLabel span,
+:root[data-theme='light'] .mermaid svg .edgeLabel p,
+:root[data-theme='light'] .mermaid svg .label {
+  background-color: #f6f8fa !important;
+  color: #4338ca !important;
+  fill: #4338ca !important;
+  font-weight: 600 !important;
+}
+
+:root[data-theme='light'] .mermaid svg .actor,
+:root[data-theme='light'] .mermaid svg rect.actor {
+  fill: #ffffff !important;
+  stroke: #6366f1 !important;
+  stroke-width: 1.5px !important;
+}
+
+:root[data-theme='light'] .mermaid svg text.actor > tspan,
+:root[data-theme='light'] .mermaid svg .actor-line {
+  fill: #1e293b !important;
+  color: #1e293b !important;
+  stroke: #6366f1 !important;
+}
+
+:root[data-theme='light'] .mermaid svg .note,
+:root[data-theme='light'] .mermaid svg rect.note,
+:root[data-theme='light'] .mermaid svg .noteRect {
+  fill: #f5f3ff !important;
+  stroke: #a855f7 !important;
+  stroke-width: 1.5px !important;
+}
+
+:root[data-theme='light'] .mermaid svg .noteText,
+:root[data-theme='light'] .mermaid svg .noteText > tspan,
+:root[data-theme='light'] .mermaid svg .noteText span {
+  fill: #4c1d95 !important;
+  color: #4c1d95 !important;
+  font-weight: 600 !important;
+}
+
+:root[data-theme='light'] .mermaid svg .labelText,
+:root[data-theme='light'] .mermaid svg .labelText tspan,
+:root[data-theme='light'] .mermaid svg .loopText,
+:root[data-theme='light'] .mermaid svg .loopText tspan,
+:root[data-theme='light'] .mermaid svg .messageText {
+  fill: #4338ca !important;
+  color: #4338ca !important;
+  font-weight: 600 !important;
+}
+
+:root[data-theme='light'] .mermaid svg .loopLine {
+  stroke: #94a3b8 !important;
+}
 
 /* ============================================================
-   2. Eye-Friendly Light Theme (Warm Neutral Slate)
+   2. Eye-Friendly Light Theme (GitHub & Linear Soft Slate)
    ============================================================ */
 :root[data-theme='light'] {
-  --sl-color-accent-low: #eef2ff;
-  --sl-color-accent: #4f46e5;
+  --sl-color-accent-low: #e0e7ff;
+  --sl-color-accent: #4338ca;
   --sl-color-accent-high: #312e81;
   
-  --sl-color-bg: #fcfcfd;
-  --sl-color-bg-nav: rgba(252, 252, 253, 0.88);
-  --sl-color-bg-sidebar: #f8fafc;
+  --sl-color-bg: #f6f8fa;
+  --sl-color-bg-nav: rgba(246, 248, 250, 0.88);
+  --sl-color-bg-sidebar: #edf2f7;
   
-  --sl-color-white: #0f172a;
-  --sl-color-gray-1: #1e293b;
-  --sl-color-gray-2: #334155;
+  --sl-color-white: #1e293b;
+  --sl-color-gray-1: #334155;
+  --sl-color-gray-2: #475569;
   --sl-color-gray-3: #64748b;
   --sl-color-gray-4: #94a3b8;
-  --sl-color-gray-5: #e2e8f0;
-  --sl-color-gray-6: #f1f5f9;
+  --sl-color-gray-5: #d0d7de;
+  --sl-color-gray-6: #ffffff;
   --sl-color-black: #ffffff;
-  --sl-color-text-accent: #4f46e5;
+  --sl-color-text-accent: #4338ca;
 }
 
 :root[data-theme='light'] .card {
   background: #ffffff !important;
-  border: 1px solid #e2e8f0 !important;
+  border: 1px solid #d0d7de !important;
   color: #1e293b !important;
-  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.03) !important;
+  box-shadow: 0 1px 3px 0 rgba(31, 35, 40, 0.04) !important;
 }
 
 :root[data-theme='light'] .card:hover {
-  border-color: #818cf8 !important;
-  box-shadow: 0 4px 12px -2px rgba(79, 70, 229, 0.08) !important;
+  border-color: #6366f1 !important;
+  box-shadow: 0 4px 14px -2px rgba(79, 70, 229, 0.1) !important;
 }
 
 :root[data-theme='light'] .site-title {
-  color: #0f172a !important;
+  color: #1e293b !important;
 }
 
 :root[data-theme='light'] .katex {
@@ -164,12 +251,27 @@
 }
 
 :root[data-theme='light'] .katex-display {
-  background: #f8fafc !important;
-  border: 1px solid #e2e8f0 !important;
+  background: #ffffff !important;
+  border: 1px solid #d0d7de !important;
+  box-shadow: 0 1px 2px 0 rgba(31, 35, 40, 0.03) !important;
 }
 
 :root[data-theme='light'] header.header {
-  border-bottom: 1px solid #e2e8f0 !important;
+  border-bottom: 1px solid #d0d7de !important;
+}
+
+:root[data-theme='light'] .series-nav-item {
+  background: #ffffff !important;
+  border: 1px solid #d0d7de !important;
+}
+
+:root[data-theme='light'] .series-nav-item:hover {
+  background: #eef2ff !important;
+  border-color: #6366f1 !important;
+}
+
+:root[data-theme='light'] .series-nav-title {
+  color: #1e293b !important;
 }
 
 /* ============================================================
@@ -213,12 +315,12 @@
    4. Compact Right Sidebar (Table of Contents) Space Optimization
    ============================================================ */
 .right-sidebar-container {
-  width: 12.5rem !important;
+  width: 13.5rem !important;
 }
 
 .right-sidebar {
   font-size: 0.8125rem !important;
-  line-height: 1.4 !important;
+  line-height: 1.45 !important;
 }
 
 .right-sidebar nav h2 {
@@ -232,11 +334,101 @@
 .right-sidebar a {
   padding-top: 0.25rem !important;
   padding-bottom: 0.25rem !important;
+  word-break: keep-all !important;
+  overflow-wrap: break-word !important;
 }
 
 /* Expand Main Content Container Width */
 .sl-container {
   max-width: 58rem !important;
+}
+
+/* Vertical Rhythm & Typography Polish */
+.sl-markdown-content h2 {
+  margin-top: 2.75rem !important;
+  margin-bottom: 1rem !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.015em;
+}
+
+.sl-markdown-content h3 {
+  margin-top: 1.85rem !important;
+  margin-bottom: 0.75rem !important;
+  font-weight: 600 !important;
+}
+
+.sl-markdown-content hr {
+  margin: 2.75rem 0 !important;
+  border: 0 !important;
+  border-top: 1px solid var(--sl-color-gray-5) !important;
+  opacity: 0.45 !important;
+}
+
+/* Series Pagination / Navigation Footer */
+.series-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 3.5rem !important;
+  padding-top: 1.5rem !important;
+  border-top: 1px solid var(--sl-color-gray-5) !important;
+}
+
+.series-nav-item {
+  display: flex;
+  flex-direction: column;
+  padding: 0.85rem 1.1rem;
+  border-radius: 8px;
+  background: var(--sl-color-gray-6);
+  border: 1px solid var(--sl-color-gray-5);
+  text-decoration: none !important;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.series-nav-item:hover {
+  border-color: var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+  transform: translateY(-1px);
+}
+
+.series-nav-item.next {
+  text-align: right;
+  grid-column: 2;
+}
+
+.series-nav-item.prev {
+  text-align: left;
+  grid-column: 1;
+}
+
+.series-nav-item.full {
+  grid-column: 1 / -1;
+}
+
+.series-nav-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: var(--sl-color-gray-3);
+  margin-bottom: 0.25rem;
+}
+
+.series-nav-title {
+  font-size: 0.925rem;
+  font-weight: 600;
+  color: var(--sl-color-white);
+  word-break: keep-all;
+}
+
+@media (max-width: 36rem) {
+  .series-nav {
+    grid-template-columns: 1fr;
+  }
+  .series-nav-item.next {
+    grid-column: 1;
+    text-align: left;
+  }
 }
 
 /* ============================================================

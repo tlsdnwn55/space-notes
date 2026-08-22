@@ -1,10 +1,12 @@
 ---
-title: "[Part 1] LLM 서빙의 이해: 왜 기존 웹 스케일링 공식은 LLM 앞에서 무너지는가?"
+title: "[Part 1] LLM 서빙의 이해와 구조적 특징"
 description: "CloudNet LLM 서빙 스터디 1주차 1편 - GPU 병렬 연산, 트랜스포머 핵심 용어, 메모리 대역폭 병목과 Prefill·Decode의 차이"
 ---
 
 :::note[스터디 기록]
-Hands-On LLM Serving and Optimization 스터디 1주차 - GPU 병렬 연산의 배경과 LLM 서빙의 병목을, 다음 편의 KV Cache 실습으로 이어지도록 정리한 1편 포스트입니다.
+CloudNet - Hands-On LLM Serving and Optimization 스터디 1주차
+
+GPU 병렬 연산의 배경과 LLM 서빙의 병목을, 다음 편의 KV Cache 실습으로 이어지도록 정리한 1편 포스트입니다.
 :::
 
 ---
@@ -169,3 +171,15 @@ Prefill은 **입력을 읽는 시간**, Decode는 **답변을 이어 쓰는 시�
 3. **Polo Club**, "Transformer Explainer" (트랜스포머 인터랙티브 연산 시각화 툴), [https://poloclub.github.io/transformer-explainer/](https://poloclub.github.io/transformer-explainer/)
 4. **Vaswani et al. (2017)**, "Attention Is All You Need", NIPS 2017, [https://arxiv.org/abs/1706.03762](https://arxiv.org/abs/1706.03762)
 5. **Kwon et al. (2023)**, "PagedAttention Paper", SOSP 2023 (vLLM 서빙 엔진 논문), [https://arxiv.org/abs/2309.06180](https://arxiv.org/abs/2309.06180)
+
+<div class="series-nav">
+  <a href="/space-notes/posts/" class="series-nav-item prev">
+    <span class="series-nav-label">목록으로</span>
+    <span class="series-nav-title">← 스터디 아카이브 목록</span>
+  </a>
+  <a href="/space-notes/posts/ai/llm-serving-part-2/" class="series-nav-item next">
+    <span class="series-nav-label">다음 파트</span>
+    <span class="series-nav-title">[Part 2] LLM 서빙 실전과 vLLM 최적화 →</span>
+  </a>
+</div>
+

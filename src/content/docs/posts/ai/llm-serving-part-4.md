@@ -1,6 +1,14 @@
 ---
-title: "[LLM Serving] Part 4: 엔터프라이즈 분산 모델 서빙 아키텍처 및 RayService 기반 vLLM GPU 서빙 구축"
+title: "[Part 4] 분산 모델 서빙과 RayService"
 description: "지식 서빙(RAG vs CAG), 엔터프라이즈 7계층 아키텍처, 추측 디코딩의 수학적 검증과 GPU 하드웨어 메모리 대역폭, KubeRay(RayService) 기반 분산 LLM 서빙 시스템 구축"
+---
+
+:::note[스터디 기록]
+CloudNet - Hands-On LLM Serving and Optimization 스터디 3~4주차
+
+Chapter 4 (Distributed Model Serving and Infrastructure) 내용을 바탕으로, 지식 서빙(RAG vs CAG), 추측 디코딩 원리, KubeRay(RayService) 기반의 엔터프라이즈 분산 LLM 서빙 시스템을 시스템 엔지니어링 관점에서 정리한 4편 포스트입니다.
+:::
+
 ---
 
 :::note[Quick Overview: Part 4 핵심 주제]
@@ -46,7 +54,7 @@ flowchart LR
 
 ### 1.1 RAG (Retrieval-Augmented Generation) vs CAG (Cache-Augmented Generation)
 
-지식 기반 LLM 애플리케이션을 구축할 때 가장 중요한 아키텍처 결정은 **"문맥(Context)을 질의 시점에 검색하여 주입할 것인가(RAG), 아니면 방대한 문맥을 GPU KV 캐시에 미리 상주시킬 것인가(CAG)"**입니다.
+지식 기반 LLM 애플리케이션을 구축할 때 가장 중요한 아키텍처 결정은 "문맥(Context)을 질의 시점에 검색하여 주입할 것인가(RAG), 아니면 방대한 문맥을 GPU KV 캐시에 미리 상주시킬 것인가(CAG)"입니다.
 
 ```mermaid
 flowchart TB
@@ -156,7 +164,7 @@ flowchart TD
 
 ### 3.2 추측 디코딩(Speculative Decoding)의 병렬 검증 원리
 
-추측 디코딩은 **"대형 모델의 Decode(1개씩 생성)를 Prefill(여러 개를 한 번에 검증)로 전환"**하여 HBM 가중치 로드 횟수를 획기적으로 줄이는 기술입니다.
+추측 디코딩은 "대형 모델의 Decode(1개씩 생성)를 Prefill(여러 개를 한 번에 검증)로 전환"하여 HBM 가중치 로드 횟수를 획기적으로 줄이는 기술입니다.
 
 ```mermaid
 sequenceDiagram
@@ -336,13 +344,13 @@ flowchart TB
 
 ### 4.4 KubeRay와 `RayService` CRD 선정 이유
 
-Kubernetes 환경에서 Ray를 운영할 때 KubeRay가 제공하는 3가지 CRD 중 왜 **`RayService`**를 사용하는지 비교합니다.
+Kubernetes 환경에서 Ray를 운영할 때 KubeRay가 제공하는 3가지 CRD 중 왜 `RayService`를 사용하는지 비교합니다.
 
 | CRD 종류 | 역할 및 용도 | 헬스체크 / 무중단 배포 | 적합한 워크로드 |
 | :--- | :--- | :--- | :--- |
-| **`RayCluster`** | Head Pod와 Worker Pod의 클러스터 인프라 자체만 관리 | Serve 애플리케이션 헬스체크 없음, 수동 재배포 필요 | 일반 분산 데이터 처리, 대규모 분산 학습 |
-| **`RayJob`** | RayCluster를 생성하여 단발성 잡을 실행하고 완료 시 클러스터 삭제 | 작업 완료 시 자동 정리 | 정기적인 대규모 배치 추론 / 파인튜닝 |
-| **`RayService` (선택)** | **RayCluster + Ray Serve 애플리케이션의 수명주기를 단일 매니페스트로 통합 관리** | **K8s `/-/routes` 엔드포인트 기반 헬스체크 + Zero-Downtime 무중단 롤링 업데이트** | **24/365 실시간 LLM 온라인 서빙** |
+| **RayCluster** | Head Pod와 Worker Pod의 클러스터 인프라 자체만 관리 | Serve 애플리케이션 헬스체크 없음, 수동 재배포 필요 | 일반 분산 데이터 처리, 대규모 분산 학습 |
+| **RayJob** | RayCluster를 생성하여 단발성 잡을 실행하고 완료 시 클러스터 삭제 | 작업 완료 시 자동 정리 | 정기적인 대규모 배치 추론 / 파인튜닝 |
+| **RayService (권장)** | RayCluster + Ray Serve 애플리케이션의 수명주기를 단일 매니페스트로 통합 관리 | K8s `/-/routes` 엔드포인트 기반 헬스체크 + Zero-Downtime 무중단 롤링 업데이트 | 24/365 실시간 LLM 온라인 서빙 |
 
 `RayService`를 사용하면 모델을 교체하거나 파라미터를 수정할 때 `kubectl apply` 한 번으로 새로운 RayCluster를 띄워 헬스체크를 통과한 후 트래픽을 넘기는 **Blue/Green 무중단 롤링 업데이트**가 자동으로 수행됩니다.
 
@@ -672,4 +680,16 @@ flowchart LR
    - `OpenAiIngress`(I/O 및 라우팅 전담)와 `LLMServer`(GPU 텐서 연산 전담)를 분리함으로써, Python 단일 이벤트 루프 병목을 원천 차단하고 GPU 가동률을 극대화합니다.
 3. **클라우드 스펙트럼과 경제적 최적화**:
    - PoC 단계에서는 `Bedrock`(Option 1)으로 빠른 검증을 수행하고, 트래픽 증가 시 `KubeRay + vLLM`(Option 6) 또는 대안 AI 클라우드로 전환하여 TCO를 최적화하는 전략적 의사결정이 필요합니다.
+
+<div class="series-nav">
+  <a href="/space-notes/posts/ai/llm-serving-part-3/" class="series-nav-item prev">
+    <span class="series-nav-label">이전 파트</span>
+    <span class="series-nav-title">← [Part 3] 모델 서빙 시스템 설계와 구현</span>
+  </a>
+  <a href="/space-notes/posts/ai/llm-serving-part-5/" class="series-nav-item next">
+    <span class="series-nav-label">다음 파트</span>
+    <span class="series-nav-title">[Part 5] LLM 서빙의 하드웨어 기초와 메모리 벽 →</span>
+  </a>
+</div>
+
 

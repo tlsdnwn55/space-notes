@@ -5,7 +5,71 @@ template: splash
 hero:
   tagline: "Personal Technical Journal & Engineering Archive"
   actions:
-    - text: 아티클 읽기
-      link: /space-notes/posts/
+    - text: 스터디 시리즈 시작하기
+      link: /space-notes/posts/ai/llm-serving-part-1/
       icon: right-arrow
+      variant: primary
+    - text: 전체 아티클 목차
+      link: /space-notes/posts/
+      icon: open-book
+      variant: secondary
+    - text: GitHub
+      link: https://github.com/tlsdnwn55/space-notes
+      icon: external
+      variant: minimal
 ---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## Hands-on LLM Serving & Optimization 시리즈
+
+CloudNet LLM 서빙 스터디의 이론, 하드웨어 구조, 분산 오케스트레이션 및 성능 최적화 기법을 정리한 연재 노트입니다.
+
+<CardGrid>
+  <Card title="[Part 1] LLM 서빙의 이해와 구조적 특징" icon="document">
+    웹 서버와 LLM 서빙의 근본 차이, GPU 병렬성 전환 및 Prefill vs Decode 단계별 하드웨어 특성을 다룹니다.
+    <LinkCard title="Part 1 읽기" href="/space-notes/posts/ai/llm-serving-part-1/" />
+  </Card>
+
+  <Card title="[Part 2] LLM 서빙 실전과 vLLM 최적화" icon="setting">
+    KV Cache 메커니즘, 메모리 단편화 문제 및 vLLM 아키텍처를 통한 서빙 최적화 실전을 정리합니다.
+    <LinkCard title="Part 2 읽기" href="/space-notes/posts/ai/llm-serving-part-2/" />
+  </Card>
+
+  <Card title="[Part 3] 모델 서빙 시스템 설계와 구현" icon="laptop">
+    FastAPI, Triton Inference Server 등 프로덕션 모델 서빙 파이프라인의 설계 원칙과 구현을 살펴봅니다.
+    <LinkCard title="Part 3 읽기" href="/space-notes/posts/ai/llm-serving-part-3/" />
+  </Card>
+
+  <Card title="[Part 4] 분산 모델 서빙과 RayService" icon="random">
+    단일 노드를 넘어선 Ray 클러스터 분산 추론 아키텍처와 KubeRay 기반 서빙 운영을 분석합니다.
+    <LinkCard title="Part 4 읽기" href="/space-notes/posts/ai/llm-serving-part-4/" />
+  </Card>
+
+  <Card title="[Part 5] LLM 서빙의 하드웨어 기초와 메모리 벽" icon="puzzle">
+    GPU 4대 핵심 사양(VRAM, 대역폭, TFLOPS, Interconnect), 부동소수점 비트 정밀도 및 Memory Wall 병목을 계산합니다.
+    <LinkCard title="Part 5 읽기" href="/space-notes/posts/ai/llm-serving-part-5/" />
+  </Card>
+
+  <Card title="[Part 6] LLM 핵심 서빙 최적화 기법" icon="rocket">
+    Continuous Batching, Chunked Prefill, PagedAttention, Speculative Decoding 및 Prefix Caching을 시각화합니다.
+    <LinkCard title="Part 6 읽기" href="/space-notes/posts/ai/llm-serving-part-6/" />
+  </Card>
+</CardGrid>
+
+---
+
+## 환경 구축 & 딥다이브 아카이브
+
+<CardGrid>
+  <Card title="로컬 RTX 4070 환경 구축 기록" icon="seti:docker">
+    Windows WSL2 환경에서 로컬 GPU 패스스루를 구성하고 Docker 및 Kubernetes(kind) 환경에 KubeRay와 vLLM을 구축한 실전 기록입니다.
+    <LinkCard title="WSL2 Docker vLLM 구축기" href="/space-notes/posts/ai/local-gpu-wsl2-vllm-guide/" />
+    <LinkCard title="WSL2 kind RayService 구축기" href="/space-notes/posts/ai/local-gpu-wsl2-rayservice-guide/" />
+  </Card>
+
+  <Card title="최신 거대 모델 서빙 아키텍처" icon="open-book">
+    DeepSeek-V3/R1과 Qwen이 수백 B 단위의 파라미터를 가볍게 서빙하기 위해 도입한 MLA 및 MoE 서빙 최적화 기법을 분석합니다.
+    <LinkCard title="DeepSeek & Qwen 서빙 분석" href="/space-notes/posts/ai/how-chinese-llms-serve-deepseek-qwen/" />
+  </Card>
+</CardGrid>

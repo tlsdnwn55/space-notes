@@ -1,10 +1,12 @@
 ---
-title: "[Part 3] 모델 서빙 시스템 설계 심층 분석: 단일 모델부터 멀티 모델까지 밑바닥부터 파헤치기"
+title: "[Part 3] 모델 서빙 시스템 설계와 구현"
 description: "CloudNet LLM 서빙 스터디 2주차 1편 - 단일 모델 서빙 6대 컴포넌트, CPU-GPU 프로세스 격리, 정적 배칭과 스트리밍의 공존, Sequence ID 생명주기, vLLM과의 비교, 멀티 모델 서빙 아키텍처 및 Triton 연동"
 ---
 
 :::note[스터디 기록]
-Hands-On LLM Serving and Optimization 스터디 2주차 - 프레임워크 뒤에 가려진 기본 원리(First Principles)를 체득하기 위해, 단일 모델 서빙 아키텍처(IPC 격리, 배칭, 스트리밍)부터 멀티 모델 서빙 시스템(LRU 캐싱, Triton 연동, 트레이드오프)까지 바닥부터 시스템 엔지니어링 관점으로 분석한 3편 포스트입니다.
+CloudNet - Hands-On LLM Serving and Optimization 스터디 2주차
+
+프레임워크 뒤에 가려진 기본 원리(First Principles)를 체득하기 위해, 단일 모델 서빙 아키텍처(IPC 격리, 배칭, 스트리밍)부터 멀티 모델 서빙 시스템(LRU 캐싱, Triton 연동, 트레이드오프)까지 바닥부터 시스템 엔지니어링 관점으로 분석한 3편 포스트입니다.
 :::
 
 ---
@@ -12,16 +14,16 @@ Hands-On LLM Serving and Optimization 스터디 2주차 - 프레임워크 뒤에
 :::note[📖 Quick Glossary: Part 3 핵심 시스템 설계 용어 사전]
 | 용어 | 이 글에서 알아둘 뜻 |
 | :--- | :--- |
-| **`LLMEngine`** | 서빙 시스템의 전체 라이프사이클과 컴포넌트 간 흐름을 총괄하는 오케스트레이터입니다. |
-| **`WorkloadManager`** | 요청 큐잉, Sequence 상태 관리, 배치 구성을 담당하는 스케줄러입니다. |
-| **`ModelExecutor`** | 별도 프로세스로 실행되는 워커와 IPC(프로세스 간 통신) 큐를 중계하는 브릿지입니다. |
-| **`ModelWorker`** | GPU에서 모델 forward pass를 실행하는 격리된 독립 작업자 프로세스입니다. |
-| **`Sequence ID`** | 배칭과 반복 디코딩 과정에서 개별 요청의 데이터, 상태, 출력을 식별하는 고유 ID입니다. |
-| **`Static Batching`** | 고정된 개수의 요청이 모일 때까지 대기하여 한 번에 처리하는 고전적 배칭 방식입니다. |
-| **`Continuous Batching`** | 토큰 단위(Iteration level)로 완료된 요청을 즉시 방출하고 새 요청을 투입하는 현대적 동적 배칭입니다. |
-| **`Cold Start Latency`** | 메모리에 로드되어 있지 않은 모델을 최초 호출할 때 발생하는 디스크/네트워크 로딩 지연시간입니다. |
-| **`LRU Eviction`** | 한정된 메모리 자원에서 가장 오랫동안 사용되지 않은 모델을 메모리에서 언로드하는 캐시 관리 기법입니다. |
-| **`Bin-Packing`** | 최소한의 GPU/서버 인스턴스에 여러 모델을 몰아넣어 인프라 비용을 극대화하는 자원 배치 전략입니다. |
+| **LLMEngine** | 서빙 시스템의 전체 라이프사이클과 컴포넌트 간 흐름을 총괄하는 오케스트레이터입니다. |
+| **WorkloadManager** | 요청 큐잉, Sequence 상태 관리, 배치 구성을 담당하는 스케줄러입니다. |
+| **ModelExecutor** | 별도 프로세스로 실행되는 워커와 IPC(프로세스 간 통신) 큐를 중계하는 브릿지입니다. |
+| **ModelWorker** | GPU에서 모델 forward pass를 실행하는 격리된 독립 작업자 프로세스입니다. |
+| **Sequence ID** | 배칭과 반복 디코딩 과정에서 개별 요청의 데이터, 상태, 출력을 식별하는 고유 ID입니다. |
+| **Static Batching** | 고정된 개수의 요청이 모일 때까지 대기하여 한 번에 처리하는 고전적 배칭 방식입니다. |
+| **Continuous Batching** | 토큰 단위(Iteration level)로 완료된 요청을 즉시 방출하고 새 요청을 투입하는 현대적 동적 배칭입니다. |
+| **Cold Start Latency** | 메모리에 로드되어 있지 않은 모델을 최초 호출할 때 발생하는 디스크/네트워크 로딩 지연시간입니다. |
+| **LRU Eviction** | 한정된 메모리 자원에서 가장 오랫동안 사용되지 않은 모델을 메모리에서 언로드하는 캐시 관리 기법입니다. |
+| **Bin-Packing** | 최소한의 GPU/서버 인스턴스에 여러 모델을 몰아넣어 인프라 비용을 극대화하는 자원 배치 전략입니다. |
 :::
 
 ---
@@ -100,12 +102,12 @@ flowchart TB
 
 | 컴포넌트 | 실행 영역 | 핵심 책임 |
 | :--- | :--- | :--- |
-| **`API Server`** | CPU (메인 프로세스) | FastAPI 기반 HTTP 엔드포인트 노출, 요청 유효성 검증, SSE(Server-Sent Events) 스트림 연결 유지 |
-| **`LLMEngine`** | CPU (메인 프로세스) | 시스템 전체의 지휘자. 워커 초기화, 요청 전달, 결과 취합 등 전체 파이프라인 조율 |
-| **`WorkloadManager`** | CPU (메인 프로세스) | 고유 `Sequence ID` 부여, FIFO 대기 큐 관리, **배칭(Batching) 전략 스케줄링** |
-| **`ModelExecutor`** | CPU (메인 프로세스) | `mp.Process`로 워커 프로세스를 생성하고 `multiprocessing.Queue`를 통한 프로세스 간 통신(IPC) 중계 |
-| **`ModelWorker`** | **GPU (독립 프로세스)** | 외부 I/O와 격리되어 오직 GPU 순방향 연산(`forward pass`)만 전담 |
-| **`ModelManager`** | GPU (독립 프로세스) | 모델 가중치와 토크나이저를 스토리지/허브에서 메모리로 로드 |
+| **API Server** | CPU (메인 프로세스) | FastAPI 기반 HTTP 엔드포인트 노출, 요청 유효성 검증, SSE(Server-Sent Events) 스트림 연결 유지 |
+| **LLMEngine** | CPU (메인 프로세스) | 시스템 전체의 지휘자. 워커 초기화, 요청 전달, 결과 취합 등 전체 파이프라인 조율 |
+| **WorkloadManager** | CPU (메인 프로세스) | 고유 `Sequence ID` 부여, FIFO 대기 큐 관리, 배칭(Batching) 전략 스케줄링 |
+| **ModelExecutor** | CPU (메인 프로세스) | `mp.Process`로 워커 프로세스를 생성하고 `multiprocessing.Queue`를 통한 프로세스 간 통신(IPC) 중계 |
+| **ModelWorker** | GPU (독립 프로세스) | 외부 I/O와 격리되어 오직 GPU 순방향 연산(`forward pass`)만 전담 |
+| **ModelManager** | GPU (독립 프로세스) | 모델 가중치와 토크나이저를 스토리지/허브에서 메모리로 로드 |
 
 ### CPU와 GPU 프로세스를 물리적으로 격리하는 이유
 1. **GPU Utilization 극대화 (Non-blocking Pipeline)**:
@@ -121,7 +123,7 @@ flowchart TB
 
 전통적인 REST API와 달리, LLM 서빙에서는 여러 사용자의 프롬프트가 **하나의 배치로 합쳐진 뒤 수십~수백 번의 토큰 생성 스텝(Iteration)**을 거치게 됩니다. 
 
-GPU는 순수한 숫자(텐서) 연산만 수행하므로, **"지금 생성된 토큰이 어느 사용자의 응답인지"** 추적할 식별자가 필요합니다. 이 역할을 하는 것이 바로 `Sequence ID`입니다.
+GPU는 순수한 숫자(텐서) 연산만 수행하므로, "지금 생성된 토큰이 어느 사용자의 응답인지" 추적할 식별자가 필요합니다. 이 역할을 하는 것이 바로 `Sequence ID`입니다.
 
 ```mermaid
 flowchart TD
@@ -274,7 +276,7 @@ sequenceDiagram
 
 - **KV Cache 부재 시의 비효율**:
   - 교육용 코드에서 `use_cache=False`로 실행하면, 매 토큰을 만들 때마다 이전 프롬프트 전체를 다시 forward pass하게 되어 토큰 길이가 길어질수록 연산량이 $O(n^2)$로 폭증합니다.
-  - 이를 통해 **"KV Cache가 왜 실전 서빙의 필수 전제조건인가"**를 역설적으로 체감할 수 있습니다.
+  - 이를 통해 "KV Cache가 왜 실전 서빙의 필수 전제조건인가"를 역설적으로 체감할 수 있습니다.
 
 ---
 
@@ -425,4 +427,14 @@ flowchart TB
 4. **멀티 모델 서빙의 핵심은 캐시와 라우팅**:
    - 공유 인프라에서의 온디맨드 로딩(비용 최적화)과 전용 인스턴스 사전 할당(지연시간 최적화) 사이에서 서비스 요구사항에 맞는 균형점을 찾아야 합니다.
 
-다음 **Part 4**에서는 이러한 서빙 엔진들이 에이전트(Agentic) 워크플로우와 결합될 때 발생하는 새로운 아키텍처 도전 과제와 프로덕션 서빙 베스트 프랙티스를 다루겠습니다.
+<div class="series-nav">
+  <a href="/space-notes/posts/ai/llm-serving-part-2/" class="series-nav-item prev">
+    <span class="series-nav-label">이전 파트</span>
+    <span class="series-nav-title">← [Part 2] LLM 서빙 실전과 vLLM 최적화</span>
+  </a>
+  <a href="/space-notes/posts/ai/llm-serving-part-4/" class="series-nav-item next">
+    <span class="series-nav-label">다음 파트</span>
+    <span class="series-nav-title">[Part 4] 분산 모델 서빙과 RayService →</span>
+  </a>
+</div>
+
